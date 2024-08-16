@@ -13,6 +13,7 @@ import com.google.android.gms.wallet.WalletConstants
 import io.flutter.plugin.common.MethodChannel
 
 import com.luizgasparetto.pay.google_pay_plugin.core.contracts.IPluginHandler
+import kotlinx.coroutines.tasks.await
 
 interface IPaymentPluginHandler: IPluginHandler
 
@@ -21,23 +22,16 @@ class PaymentPluginHandler: IPaymentPluginHandler {
         TODO("Not yet implemented")
     }
 
-
-
-
-    fun isReadyToPay(result: MethodChannel.Result) {
+    private suspend fun isReadyToPay(activity: Activity): Boolean {
         val isReadyToPayRequest = IsReadyToPayRequest.fromJson("{\"allowedPaymentMethods\":[{\"type\":\"CARD\",\"parameters\":{\"allowedAuthMethods\":[\"PAN_ONLY\",\"CRYPTOGRAM_3DS\"],\"allowedCardNetworks\":[\"AMEX\",\"DISCOVER\",\"MASTERCARD\",\"VISA\"]}}]}")
-        val task: Task<Boolean> = paymentsClient.isReadyToPay(isReadyToPayRequest)
-        task.addOnCompleteListener { completedTask ->
-            try {
-                val isReady = completedTask.getResult(ApiException::class.java)
-                result.success(isReady)
-            } catch (exception: ApiException) {
-                result.error("ERROR", exception.message, null)
-            }
-        }
+
+        val clients = getPaymentsClient(activity)
+
+        return clients.isReadyToPay(isReadyToPayRequest).await()
+
     }
 
-    fun getPaymentsClient(activity: Activity): PaymentsClient {
+    private fun getPaymentsClient(activity: Activity): PaymentsClient {
         val builder = Wallet.WalletOptions.Builder()
         val environmentWallet = builder.setEnvironment(WalletConstants.ENVIRONMENT_TEST)
         val options = environmentWallet.build()

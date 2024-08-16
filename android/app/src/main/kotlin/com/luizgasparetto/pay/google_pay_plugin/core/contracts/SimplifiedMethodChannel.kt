@@ -11,10 +11,12 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 
-abstract class SimplifiedMethodChannel(private val channelName: String): FlutterPlugin, MethodCallHandler, ActivityAware {
+abstract class SimplifiedMethodChannel: FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var channel: MethodChannel
     private lateinit var activity: Activity
     protected lateinit var context: Context
+
+    abstract val channelName: String
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(binding.binaryMessenger, channelName)
@@ -30,7 +32,6 @@ abstract class SimplifiedMethodChannel(private val channelName: String): Flutter
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
     }
-
 
     override fun onDetachedFromActivityForConfigChanges() = Unit
 
