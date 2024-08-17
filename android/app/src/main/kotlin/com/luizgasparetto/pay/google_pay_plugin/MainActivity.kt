@@ -1,6 +1,7 @@
 package com.luizgasparetto.pay.google_pay_plugin
 
 import com.luizgasparetto.pay.google_pay_plugin.plugins.payment.PaymentPlugin
+import com.luizgasparetto.pay.google_pay_plugin.plugins.payment.paymentModule
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

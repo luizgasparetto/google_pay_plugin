@@ -14,7 +14,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 abstract class SimplifiedMethodChannel: FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var channel: MethodChannel
     private lateinit var activity: Activity
-    protected lateinit var context: Context
+    private lateinit var context: Context
 
     abstract val channelName: String
 
