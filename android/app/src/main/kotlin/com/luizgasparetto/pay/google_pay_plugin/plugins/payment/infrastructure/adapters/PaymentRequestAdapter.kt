@@ -4,55 +4,57 @@ import com.google.android.gms.wallet.CardRequirements
 import com.google.android.gms.wallet.PaymentMethodTokenizationParameters
 import com.google.android.gms.wallet.TransactionInfo
 
+import org.json.JSONArray
+import org.json.JSONObject
+
+import com.luizgasparetto.pay.google_pay_plugin.plugins.payment.infrastructure.constants.REQUEST_PARAMETER
+
 class PaymentRequestAdapter(
     private val transactionInfo: TransactionInfo,
     private val cardRequirements: CardRequirements,
     private val methodTokenizationParameters: PaymentMethodTokenizationParameters
 ) {
     fun toJson(): String    {
-        return """
-            {
-                "transactionInfo": ${getTransactionInfoJson()},
-                "allowedPaymentMethods": [
-                    {
-                        "type": "CARD",
-                        "parameters": ${getCardRequirementsJson()},
-                        "tokenizationSpecification": ${getTokenizationSpecification()}
-                    }
-                ]
-            }
-        """.trimIndent()
+        val transactionInfo = getTransactionInfoJson()
+        val allowedPaymentMethods = getAllowedPaymentMethodsJson()
+
+        return JSONObject().apply {
+            put("transactionInfo", transactionInfo)
+            put("allowedPaymentMethods", JSONArray().apply { put(allowedPaymentMethods) })
+        }.toString().trimIndent()
     }
 
-    private fun getTransactionInfoJson(): String {
-        return """
-            {
-                "totalPriceStatus": ${transactionInfo.totalPriceStatus},
-                "totalPrice": ${transactionInfo.totalPrice},
-                "currencyCode": ${transactionInfo.currencyCode} 
-            }
-        """.trimIndent()
+    private fun getTransactionInfoJson(): JSONObject {
+        return JSONObject().apply {
+            put("totalPriceStatus", transactionInfo.totalPriceStatus)
+            put("totalPrice", transactionInfo.totalPrice)
+            put("currencyCode", transactionInfo.currencyCode)
+        }
     }
 
-    private fun getCardRequirementsJson(): String {
-        val cards = cardRequirements.allowedCardNetworks
-        val cardsJson = cards?.joinToString(separator = "\", \"", prefix = "\"", postfix = "\"")
+    private fun getAllowedPaymentMethodsJson(): JSONObject {
+        val parameters = getCardRequirementsJson()
+        val tokenization = getTokenizationSpecificationJson()
 
-        return """
-            {
-              "allowedCardNetworks": [$cardsJson]
-            }
-        """.trimIndent()
+        return JSONObject().apply {
+            put("type", "CARD")
+            put("parameters", parameters)
+            put("tokenizationSpecification", tokenization)
+        }
     }
 
-    private fun getTokenizationSpecification(): String {
-        return """
-            {
-              "type": "${methodTokenizationParameters.paymentMethodTokenizationType}",
-              "parameters": {
-                "publicKey": ${methodTokenizationParameters.parameters.getString("publicKey")}
-              }
-            }
-        """.trimIndent()
+    private fun getCardRequirementsJson(): JSONObject {
+        return JSONObject().apply {
+            put("allowedCardNetworks", cardRequirements.allowedCardNetworks)
+        }
+    }
+
+    private fun getTokenizationSpecificationJson(): JSONObject {
+        return JSONObject().apply {
+            put("type", methodTokenizationParameters.paymentMethodTokenizationType)
+            put("parameters", JSONObject().apply {
+                put("publicKey", methodTokenizationParameters.parameters.getString(REQUEST_PARAMETER))
+            })
+        }
     }
  }

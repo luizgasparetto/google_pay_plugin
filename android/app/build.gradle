@@ -63,8 +63,8 @@ flutter {
 dependencies {
     implementation "io.insert-koin:koin-core:3.1.2"
     implementation "io.insert-koin:koin-android:3.1.2"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
     implementation "com.google.android.gms:play-services-wallet:19.4.0"
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4'

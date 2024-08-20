@@ -7,14 +7,15 @@ import com.google.android.gms.wallet.PaymentMethodTokenizationParameters
 
 import com.google.android.gms.wallet.TransactionInfo
 import com.google.android.gms.wallet.WalletConstants
+
 import com.luizgasparetto.pay.google_pay_plugin.plugins.payment.infrastructure.adapters.PaymentRequestAdapter
+import com.luizgasparetto.pay.google_pay_plugin.plugins.payment.infrastructure.constants.REQUEST_PARAMETER
+import com.luizgasparetto.pay.google_pay_plugin.plugins.payment.infrastructure.models.PriceInfoModel
 
-
-private const val KEY_PARAMETER: String = "publicKey"
 
 object PaymentRequestBuilder {
-    fun build(price: String, currencyCode: String): PaymentDataRequest {
-        val transactionInfo = buildTransactionInfo(price, currencyCode)
+    fun build(info: PriceInfoModel = PriceInfoModel()): PaymentDataRequest {
+        val transactionInfo = buildTransactionInfo(info.price.toString(), info.currencyCode)
         val cardRequirements = buildCardRequirements()
         val tokenization = buildPaymentMethodTokenization()
 
@@ -48,7 +49,7 @@ object PaymentRequestBuilder {
         val tokenizationType = WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_PAYMENT_GATEWAY
         val tokenizationTypeBuilder = builder.setPaymentMethodTokenizationType(tokenizationType)
 
-        val parameterBuilder = tokenizationTypeBuilder.addParameter(KEY_PARAMETER, "KEY_HERE")
+        val parameterBuilder = tokenizationTypeBuilder.addParameter(REQUEST_PARAMETER, "KEY_HERE")
 
         return parameterBuilder.build()
     }
