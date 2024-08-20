@@ -1,4 +1,4 @@
-Google Pay Plugin - Flutter Integration
+# Google Pay Plugin - Flutter Integration
 
 [![Flutter](https://img.shields.io/badge/Flutter-blue)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Android-blue)](https://www.android.com/intl/pt_br/v)
